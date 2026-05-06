@@ -289,7 +289,7 @@ const FIXED_BUDGET={
   ],
   living:[{name:'케이뱅크 생활비',budget:1000000,sub:'케이뱅크 체크카드'}]
 };
-const APRIL_ACTUAL={income:[2200000,2300000,900000],fixed:[67420,34100,48000,null,null,1376645,12570,20702,18640,25386,900000],savings:[500000,150000,350000],living:[1000000]};
+const APRIL_ACTUAL={income:[2200000,2300000,900000],fixed:[67420,34100,48000,null,null,1376645,12570,20702,18640,null,900000],savings:[500000,150000,350000],living:[1000000]};
 const APRIL_DETAILS=[
   {date:'04-01',name:'악어떡볶이',amount:40600,cat:'식비'},{date:'04-01',name:'위캔드그리니치',amount:12000,cat:'쇼핑'},
   {date:'04-02',name:'동탄정신건강의학과',amount:27600,cat:'의료'},{date:'04-02',name:'공차코리아',amount:11600,cat:'카페'},
@@ -339,14 +339,14 @@ window.addEventListener('firebase-ready',async()=>{
   try{
     const snap=await window.fbGet('gagyebu/2026/actuals/3');
     const vsnap=await window.fbGet('gagyebu/2026/version');
-    if(snap.val()===null||vsnap.val()!=='v6'){
+    if(snap.val()===null||vsnap.val()!=='v8'){
       for(const cat of ['income','fixed','savings','living']){
         for(let i=0;i<FIXED_BUDGET[cat].length;i++){
           const v=APRIL_ACTUAL[cat]?.[i];
           if(v!==null&&v!==undefined) await window.fbSet('gagyebu/2026/actuals/3/'+cat+'/'+i,v);
         }
       }
-      await window.fbSet('gagyebu/2026/version','v6');
+      await window.fbSet('gagyebu/2026/version','v8');
     }
     const dsnap=await window.fbGet('gagyebu/2026/details/3');
     if(dsnap.val()===null){
