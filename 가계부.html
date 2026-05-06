@@ -322,7 +322,7 @@ const APRIL_DETAILS=[
   {date:'04-21',name:'동탄5동행정복지센터',amount:1000,cat:'기타'}
 ];
 
-let currentMonth=3,donutChart=null,annualChart=null,detailFilter='전체';
+let currentMonth=new Date().getMonth(),donutChart=null,annualChart=null,detailFilter='전체';
 let fbCache={},fbDetailCache={};
 
 function setSyncStatus(state,text){
