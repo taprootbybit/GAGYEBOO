@@ -423,6 +423,9 @@ function renderMonth(){
   const details=loadDetails(currentMonth);
   const detailTotal=details.reduce((a,b)=>a+b.amount,0);
   const s=calcSummary(data,detailTotal>0?detailTotal:null);
+  const extras=loadExtraSavings(currentMonth);
+  const extraTotal=extras.reduce((a,e)=>a+e.amount,0);
+  const savingsTotal=s.savings+extraTotal;
   const livingRemain=s.livingBudget-s.livingActual;
   const livingPct=s.livingBudget>0?Math.min(100,Math.round(s.livingActual/s.livingBudget*100)):0;
   const livingColor=livingRemain>=0?'var(--gold)':'var(--red)';
@@ -430,7 +433,7 @@ function renderMonth(){
   document.getElementById('summaryCards').innerHTML=`
     <div class="card income"><div class="card-label">💰 수입</div><div class="card-value">${fmt(s.income)}</div><div class="card-sub">예산 ${fmt(s.budgetIncome)}</div></div>
     <div class="card expense"><div class="card-label">📌 고정지출</div><div class="card-value">${fmt(s.fixed)}</div><div class="card-sub">예산 ${fmt(s.budgetFixed)}</div></div>
-    <div class="card savings"><div class="card-label">💎 저축</div><div class="card-value">${fmt(s.savings)}</div><div class="card-sub">예산 ${fmt(s.budgetSavings)}</div></div>
+    <div class="card savings"><div class="card-label">💎 저축</div><div class="card-value">${fmt(savingsTotal)}</div><div class="card-sub">예산 ${fmt(s.budgetSavings)}</div></div>
     <div class="card wide" style="background:var(--surface2);padding:16px">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
         <div>
@@ -448,15 +451,16 @@ function renderMonth(){
         <div style="width:${livingPct}%;height:100%;background:${livingBarColor};border-radius:4px;transition:width .6s"></div>
       </div>
     </div>`;
-  const bal=s.balance;
+  const bal=s.balance-extraTotal;
   document.getElementById('balanceAmount').textContent=fmt(bal);
   document.getElementById('balanceCard').style.background=bal>=0?'linear-gradient(135deg,#FBF0E8,#F5E5D5)':'linear-gradient(135deg,var(--red-dim),#2a0a0a)';
   document.getElementById('balanceAmount').style.color=bal>=0?'var(--gold)':'var(--red)';
   if(donutChart)donutChart.destroy();
-  donutChart=new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:['고정지출','저축','생활비','잔액'],datasets:[{data:[s.fixed,s.savings,s.livingActual,Math.max(0,s.balance)],backgroundColor:['#E05C5C','#72C47A','#CF8C63','#6B9FD4'],borderWidth:0,borderRadius:4}]},options:{cutout:'70%',plugins:{legend:{position:'bottom',labels:{color:'#78716C',font:{family:'Pretendard',size:13},padding:12,boxWidth:12}}},animation:{duration:600}}});
+  donutChart=new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:['고정지출','저축','생활비','잔액'],datasets:[{data:[s.fixed,savingsTotal,s.livingActual,Math.max(0,bal)],backgroundColor:['#E05C5C','#72C47A','#CF8C63','#6B9FD4'],borderWidth:0,borderRadius:4}]},options:{cutout:'70%',plugins:{legend:{position:'bottom',labels:{color:'#78716C',font:{family:'Pretendard',size:13},padding:12,boxWidth:12}}},animation:{duration:600}}});
   renderSection('incomeSection','💰 수입','income',data.income,'#4f8ef7');
   renderSection('fixedSection','📌 고정지출','fixed',data.fixed,'#f75c5c');
   renderSection('savingsSection','💎 저축 / 적립','savings',data.savings,'#4ade80');
+  if(extraTotal>0){const sEl=document.getElementById('savingsSection');const tEl=sEl&&sEl.querySelector('.section-total');if(tEl)tEl.textContent=fmt(savingsTotal);}
   renderSection('livingSection','🛒 생활비 예산','living',data.living,'#f5c842');
   renderExtraSavingsSection();
   renderDetailSection();
@@ -585,16 +589,24 @@ async function deleteDetail(id){
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500);}
 
 function renderAnnual(){
-  const md=MONTHS.map((_,i)=>{const d=getMonthData(i),s=calcSummary(d);const spend=s.income-s.savings-s.balance;return{...s,spend,hasAny:fbCache?.actuals?.[i]!=null||i===3};});
+  const md=MONTHS.map((_,i)=>{
+    const d=getMonthData(i),s=calcSummary(d);
+    const extRaw=fbDetailCache?.['extra_savings_'+i];
+    const extra=extRaw?Object.values(extRaw).reduce((a,e)=>a+e.amount,0):0;
+    const savTotal=s.savings+extra;
+    const yongdon=s.balance-extra;
+    const spend=s.income-savTotal-yongdon;
+    return{...s,savTotal,yongdon,spend,hasAny:fbCache?.actuals?.[i]!=null||i===3};
+  });
   if(annualChart)annualChart.destroy();
   annualChart=new Chart(document.getElementById('annualChart'),{type:'bar',data:{labels:MONTHS,datasets:[
     {label:'수입',data:md.map(d=>d.hasAny?d.income:null),backgroundColor:'#6B9FD4',borderRadius:4},
     {label:'지출',data:md.map(d=>d.hasAny?d.spend:null),backgroundColor:'#E05C5C',borderRadius:4},
-    {label:'저축',data:md.map(d=>d.hasAny?d.savings:null),backgroundColor:'#3D9E58',borderRadius:4},
-    {label:'잔액',data:md.map(d=>d.hasAny?d.balance:null),backgroundColor:'#CF8C63',borderRadius:4}
+    {label:'저축',data:md.map(d=>d.hasAny?d.savTotal:null),backgroundColor:'#3D9E58',borderRadius:4},
+    {label:'윤희 용돈',data:md.map(d=>d.hasAny?Math.max(0,d.yongdon):null),backgroundColor:'#CF8C63',borderRadius:4}
   ]},options:{plugins:{legend:{labels:{color:'#78716C',font:{family:'Pretendard',size:13},boxWidth:12}}},scales:{x:{ticks:{color:'#78716C',font:{family:'Pretendard',size:12}},grid:{color:'#E5DDD4'}},y:{ticks:{color:'#78716C',font:{family:'Pretendard',size:12},callback:v=>(v/10000).toFixed(0)+'만'},grid:{color:'#E5DDD4'}}},animation:{duration:600}}});
   const fmtM=v=>(v/10000).toFixed(0)+'만';
-  document.getElementById('annualTable').innerHTML=`<thead><tr><th>월</th><th>수입</th><th>지출</th><th>저축</th><th>잔액</th></tr></thead><tbody>${md.map((d,i)=>d.hasAny?`<tr><td>${MONTHS[i]}</td><td class="has-val" style="color:#4f8ef7">${fmtM(d.income)}</td><td class="has-val" style="color:#f75c5c">${fmtM(d.spend)}</td><td class="has-val" style="color:#3D9E58">${fmtM(d.savings)}</td><td class="has-val" style="color:${d.balance>=0?'#CF8C63':'#f75c5c'}">${fmtM(d.balance)}</td></tr>`:`<tr><td>${MONTHS[i]}</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`).join('')}</tbody>`;
+  document.getElementById('annualTable').innerHTML=`<thead><tr><th>월</th><th>수입</th><th>지출</th><th>저축</th><th>윤희 용돈</th></tr></thead><tbody>${md.map((d,i)=>d.hasAny?`<tr><td>${MONTHS[i]}</td><td class="has-val" style="color:#4f8ef7">${fmtM(d.income)}</td><td class="has-val" style="color:#f75c5c">${fmtM(d.spend)}</td><td class="has-val" style="color:#3D9E58">${fmtM(d.savTotal)}</td><td class="has-val" style="color:#CF8C63">${fmtM(d.yongdon)}</td></tr>`:`<tr><td>${MONTHS[i]}</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`).join('')}</tbody>`;
 }
 const WEDDING_BUDGET=69000000;
 const WEDDING_CATS=[
