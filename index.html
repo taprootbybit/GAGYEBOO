@@ -522,7 +522,7 @@ function renderSection(elId,title,cat,items,color){
 function formatInput(el){const r=el.value.replace(/,/g,'');if(r!==''&&!isNaN(r))el.value=parseInt(r).toLocaleString('ko-KR');}
 async function handleInput(el){
   const cat=el.dataset.cat,idx=parseInt(el.dataset.idx);
-  const r=el.value.replace(/,/g,'');const val=r===''?null:parseInt(r);
+  const r=el.value.replace(/,/g,'');const parsed=parseInt(r);const val=r===''?null:(isNaN(parsed)?null:parsed);
   await saveActual(currentMonth,cat,idx,val);showToast('💾 저장됨');
 }
 
@@ -587,10 +587,10 @@ function renderAnnual(){
   if(annualChart)annualChart.destroy();
   annualChart=new Chart(document.getElementById('annualChart'),{type:'bar',data:{labels:MONTHS,datasets:[
     {label:'수입',data:md.map((d,i)=>d.hasAny?d.income:null),backgroundColor:'#4f8ef7',borderRadius:4},
-    {label:'지출합계',data:md.map((d,i)=>d.hasAny?d.fixed+d.savings+d.living:null),backgroundColor:'#f75c5c',borderRadius:4},
+    {label:'지출합계',data:md.map((d,i)=>d.hasAny?d.income-d.balance:null),backgroundColor:'#f75c5c',borderRadius:4},
     {label:'윤희 용돈',data:md.map((d,i)=>d.hasAny?d.balance:null),backgroundColor:'#f5c842',borderRadius:4}
   ]},options:{plugins:{legend:{labels:{color:'#8b91a8',font:{family:'Pretendard',size:11},boxWidth:12}}},scales:{x:{ticks:{color:'#8b91a8',font:{family:'Pretendard',size:10}},grid:{color:'#2e3347'}},y:{ticks:{color:'#8b91a8',font:{family:'Pretendard',size:10},callback:v=>(v/10000).toFixed(0)+'만'},grid:{color:'#2e3347'}}},animation:{duration:600}}});
-  document.getElementById('annualTable').innerHTML=`<thead><tr><th>월</th><th>수입</th><th>지출</th><th>윤희 용돈</th></tr></thead><tbody>${md.map((d,i)=>d.hasAny?`<tr><td>${MONTHS[i]}</td><td class="has-val" style="color:#4f8ef7">${(d.income/10000).toFixed(0)}만</td><td class="has-val" style="color:#f75c5c">${((d.fixed+d.savings+d.living)/10000).toFixed(0)}만</td><td class="has-val" style="color:${d.balance>=0?'#f5c842':'#f75c5c'}">${(d.balance/10000).toFixed(0)}만</td></tr>`:`<tr><td>${MONTHS[i]}</td><td>-</td><td>-</td><td>-</td></tr>`).join('')}</tbody>`;
+  document.getElementById('annualTable').innerHTML=`<thead><tr><th>월</th><th>수입</th><th>지출</th><th>윤희 용돈</th></tr></thead><tbody>${md.map((d,i)=>d.hasAny?`<tr><td>${MONTHS[i]}</td><td class="has-val" style="color:#4f8ef7">${(d.income/10000).toFixed(0)}만</td><td class="has-val" style="color:#f75c5c">${((d.income-d.balance)/10000).toFixed(0)}만</td><td class="has-val" style="color:${d.balance>=0?'#f5c842':'#f75c5c'}">${(d.balance/10000).toFixed(0)}만</td></tr>`:`<tr><td>${MONTHS[i]}</td><td>-</td><td>-</td><td>-</td></tr>`).join('')}</tbody>`;
 }
 function showPage(page){
   document.getElementById('pageMonth').classList.toggle('active',page==='month');
