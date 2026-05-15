@@ -28,10 +28,10 @@
 </script>
 <style>
   :root {
-    --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3347;
-    --text:#e8eaf0;--text2:#8b91a8;--blue:#4f8ef7;--blue-dim:#1e3a6e;
-    --red:#f75c5c;--red-dim:#4a1a1a;--green:#4ade80;--green-dim:#1a3a28;
-    --gold:#f5c842;--gold-dim:#3a3010;--purple:#a78bfa;
+    --bg:#1C1917;--surface:#262220;--surface2:#312B27;--border:#3D3530;
+    --text:#F0E6D9;--text2:#9B8F83;--blue:#6B9FD4;--blue-dim:#1A2E42;
+    --red:#E05C5C;--red-dim:#3D1818;--green:#72C47A;--green-dim:#1A2E1C;
+    --gold:#CF8C63;--gold-dim:#3A2010;--purple:#C4956A;
     --radius:16px;--radius-sm:10px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -42,20 +42,20 @@
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
   .sync-ok .sync-dot{animation:pulse 2s infinite;}
   .sync-status{font-size:11px;color:var(--text2);display:flex;align-items:center;}
-  .header{background:linear-gradient(135deg,#1a1d27,#0f1117);border-bottom:1px solid var(--border);padding:20px 24px 0;position:sticky;top:0;z-index:100;}
+  .header{background:linear-gradient(135deg,#262220,#1C1917);border-bottom:1px solid var(--border);padding:20px 24px 0;position:sticky;top:0;z-index:100;}
   .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
   .logo{display:flex;align-items:center;gap:12px;}
-  .logo-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .logo-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#CF8C63,#E8A87C);display:flex;align-items:center;justify-content:center;font-size:20px;}
   .logo-text h1{font-size:18px;font-weight:800;}
   .logo-text p{font-size:12px;color:var(--text2);}
-  .year-badge{background:var(--surface2);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;color:var(--blue);}
+  .year-badge{background:var(--surface2);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;color:var(--gold);}
   .month-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;}
   .month-tabs::-webkit-scrollbar{display:none;}
   .tab{flex-shrink:0;padding:10px 16px;border:none;background:none;cursor:pointer;font-family:'Pretendard',sans-serif;font-size:13px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
   .tab:hover{color:var(--text);}
-  .tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:700;}
+  .tab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:700;}
   .tab.has-data{color:var(--text);}
-  .tab.active.has-data{color:var(--blue);}
+  .tab.active.has-data{color:var(--gold);}
   .main{padding:24px 16px;max-width:480px;margin:0 auto;}
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
   .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
@@ -69,16 +69,16 @@
   .chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;}
   .chart-title{font-size:13px;font-weight:700;margin-bottom:16px;color:var(--text2);}
   .chart-container{position:relative;height:200px;}
-  .balance-card{background:linear-gradient(135deg,var(--gold-dim),#2a2010);border:1px solid #6b5a10;border-radius:var(--radius);padding:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
-  .balance-label{font-size:13px;color:#c9a830;font-weight:600;}
+  .balance-card{background:linear-gradient(135deg,var(--gold-dim),#1C1410);border:1px solid #6B4228;border-radius:var(--radius);padding:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
+  .balance-label{font-size:13px;color:var(--gold);font-weight:600;}
   .balance-amount{font-size:28px;font-weight:800;color:var(--gold);}
-  .balance-sub{font-size:11px;color:#8a7520;margin-top:2px;}
+  .balance-sub{font-size:11px;color:#7A5040;margin-top:2px;}
   .annual-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;}
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;}
   .toast.show{opacity:1;}
   .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0 20px;z-index:100;}
   .nav-btn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:'Pretendard',sans-serif;color:var(--text2);font-size:10px;padding:4px 16px;border-radius:8px;transition:color .2s;}
-  .nav-btn.active{color:var(--blue);}
+  .nav-btn.active{color:var(--gold);}
   .nav-btn .icon{font-size:22px;}
   .page{display:none;}
   .page.active{display:block;}
@@ -101,30 +101,30 @@
   .item-sub{font-size:11px;color:var(--text2);margin-top:2px;}
   .item-amounts{text-align:right;flex-shrink:0;}
   .item-actual{font-size:14px;font-weight:700;background:none;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;text-align:right;width:100px;padding:2px 0;border-bottom:1px dashed var(--border);color:var(--text);transition:border-color .2s;}
-  .item-actual:focus{outline:none;border-bottom-color:var(--blue);}
+  .item-actual:focus{outline:none;border-bottom-color:var(--gold);}
   .item-actual.filled{border-bottom-color:transparent;}
   .cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
   .cat-tab{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:11px;font-weight:600;cursor:pointer;font-family:'Pretendard',sans-serif;transition:all .2s;}
   .cat-tab.active{border-color:transparent;color:#fff;}
   .cat-tab[data-cat="전체"].active{background:var(--gold);}
-  .cat-tab[data-cat="식비"].active{background:#f97316;}
-  .cat-tab[data-cat="카페"].active{background:#a78bfa;}
-  .cat-tab[data-cat="쇼핑"].active{background:#ec4899;}
-  .cat-tab[data-cat="교통"].active{background:#4f8ef7;}
-  .cat-tab[data-cat="의료"].active{background:#4ade80;}
-  .cat-tab[data-cat="기타"].active{background:#8b91a8;}
+  .cat-tab[data-cat="식비"].active{background:#E8854A;}
+  .cat-tab[data-cat="카페"].active{background:#C4956A;}
+  .cat-tab[data-cat="쇼핑"].active{background:#E06B9F;}
+  .cat-tab[data-cat="교통"].active{background:#6B9FD4;}
+  .cat-tab[data-cat="의료"].active{background:#72C47A;}
+  .cat-tab[data-cat="기타"].active{background:#9B8F83;}
   .detail-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
   .detail-left{flex:1;min-width:0;}
   .detail-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .detail-date{font-size:11px;color:var(--text2);margin-top:2px;}
   .detail-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
   .cat-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;white-space:nowrap;}
-  .cat-식비{background:rgba(249,115,22,.2);color:#f97316;}
-  .cat-카페{background:rgba(167,139,250,.2);color:#a78bfa;}
-  .cat-쇼핑{background:rgba(236,72,153,.2);color:#ec4899;}
-  .cat-교통{background:rgba(79,142,247,.2);color:#4f8ef7;}
-  .cat-의료{background:rgba(74,222,128,.2);color:#4ade80;}
-  .cat-기타{background:rgba(139,145,168,.2);color:#8b91a8;}
+  .cat-식비{background:rgba(232,133,74,.2);color:#E8854A;}
+  .cat-카페{background:rgba(196,149,106,.2);color:#C4956A;}
+  .cat-쇼핑{background:rgba(224,107,159,.2);color:#E06B9F;}
+  .cat-교통{background:rgba(107,159,212,.2);color:#6B9FD4;}
+  .cat-의료{background:rgba(114,196,122,.2);color:#72C47A;}
+  .cat-기타{background:rgba(155,143,131,.2);color:#9B8F83;}
   .del-btn{background:none;border:none;cursor:pointer;color:var(--text2);font-size:16px;padding:2px;line-height:1;transition:color .2s;}
   .del-btn:hover{color:var(--red);}
   .add-detail-btn{width:100%;padding:12px;border-radius:var(--radius-sm);background:var(--surface2);border:1px dashed var(--border);color:var(--text2);font-family:'Pretendard',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
@@ -146,13 +146,13 @@
   .cat-select{display:flex;gap:6px;flex-wrap:wrap;}
   .cat-opt{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;font-family:'Pretendard',sans-serif;transition:all .2s;}
   .cat-opt.selected{border-color:transparent;color:#fff;}
-  .cat-opt[data-v="식비"].selected{background:#f97316;}
-  .cat-opt[data-v="카페"].selected{background:#a78bfa;}
-  .cat-opt[data-v="쇼핑"].selected{background:#ec4899;}
+  .cat-opt[data-v="식비"].selected{background:#E8854A;}
+  .cat-opt[data-v="카페"].selected{background:#C4956A;}
+  .cat-opt[data-v="쇼핑"].selected{background:#E06B9F;}
   .cat-opt[data-v="교통"].selected{background:#4f8ef7;}
   .cat-opt[data-v="의료"].selected{background:#4ade80;}
   .cat-opt[data-v="기타"].selected{background:#8b91a8;}
-  .modal-save{width:100%;padding:15px;border-radius:var(--radius-sm);background:var(--gold);border:none;color:#1a1200;font-family:'Pretendard',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;}
+  .modal-save{width:100%;padding:15px;border-radius:var(--radius-sm);background:var(--gold);border:none;color:#1C1410;font-family:'Pretendard',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;}
   .loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px;}
   .loading.hide{display:none;}
   @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
@@ -424,7 +424,7 @@ function renderMonth(){
   const livingRemain=s.livingBudget-s.livingActual;
   const livingPct=s.livingBudget>0?Math.min(100,Math.round(s.livingActual/s.livingBudget*100)):0;
   const livingColor=livingRemain>=0?'var(--gold)':'var(--red)';
-  const livingBarColor=livingRemain>=0?'#f5c842':'#f75c5c';
+  const livingBarColor=livingRemain>=0?'#CF8C63':'#E05C5C';
   document.getElementById('summaryCards').innerHTML=`
     <div class="card income"><div class="card-label">💰 수입</div><div class="card-value">${fmt(s.income)}</div><div class="card-sub">예산 ${fmt(s.budgetIncome)}</div></div>
     <div class="card expense"><div class="card-label">📌 고정지출</div><div class="card-value">${fmt(s.fixed)}</div><div class="card-sub">예산 ${fmt(s.budgetFixed)}</div></div>
@@ -448,10 +448,10 @@ function renderMonth(){
     </div>`;
   const bal=s.balance;
   document.getElementById('balanceAmount').textContent=fmt(bal);
-  document.getElementById('balanceCard').style.background=bal>=0?'linear-gradient(135deg,var(--gold-dim),#2a2010)':'linear-gradient(135deg,var(--red-dim),#2a0a0a)';
+  document.getElementById('balanceCard').style.background=bal>=0?'linear-gradient(135deg,var(--gold-dim),#1C1410)':'linear-gradient(135deg,var(--red-dim),#2a0a0a)';
   document.getElementById('balanceAmount').style.color=bal>=0?'var(--gold)':'var(--red)';
   if(donutChart)donutChart.destroy();
-  donutChart=new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:['고정지출','저축','생활비','잔액'],datasets:[{data:[s.fixed,s.savings,s.livingActual,Math.max(0,s.balance)],backgroundColor:['#f75c5c','#4ade80','#f5c842','#4f8ef7'],borderWidth:0,borderRadius:4}]},options:{cutout:'70%',plugins:{legend:{position:'bottom',labels:{color:'#8b91a8',font:{family:'Pretendard',size:11},padding:12,boxWidth:12}}},animation:{duration:600}}});
+  donutChart=new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:['고정지출','저축','생활비','잔액'],datasets:[{data:[s.fixed,s.savings,s.livingActual,Math.max(0,s.balance)],backgroundColor:['#E05C5C','#72C47A','#CF8C63','#6B9FD4'],borderWidth:0,borderRadius:4}]},options:{cutout:'70%',plugins:{legend:{position:'bottom',labels:{color:'#9B8F83',font:{family:'Pretendard',size:11},padding:12,boxWidth:12}}},animation:{duration:600}}});
   renderSection('incomeSection','💰 수입','income',data.income,'#4f8ef7');
   renderSection('fixedSection','📌 고정지출','fixed',data.fixed,'#f75c5c');
   renderSection('savingsSection','💎 저축 / 적립','savings',data.savings,'#4ade80');
@@ -541,7 +541,7 @@ function renderDetailSection(){
   if(livingCard){
     livingCard.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div><div class="card-label">🛒 생활비</div><div class="card-value" style="color:${livingColor2}">${fmt(s2.livingActual)}</div><div class="card-sub">예산 ${fmt(s2.livingBudget)}</div></div><div style="text-align:right"><div style="font-size:11px;color:var(--text2);margin-bottom:4px">${livingRemain2>=0?'남은 금액':'초과'}</div><div style="font-size:18px;font-weight:800;color:${livingColor2}">${fmt(Math.abs(livingRemain2))}</div><div style="font-size:11px;color:var(--text2)">${livingPct2}% 사용</div></div></div><div style="background:var(--border);border-radius:4px;height:6px;overflow:hidden"><div style="width:${livingPct2}%;height:100%;background:${livingBarColor2};border-radius:4px;transition:width .6s"></div></div>`;
     document.getElementById('balanceAmount').textContent=fmt(s2.balance);
-    document.getElementById('balanceCard').style.background=s2.balance>=0?'linear-gradient(135deg,var(--gold-dim),#2a2010)':'linear-gradient(135deg,var(--red-dim),#2a0a0a)';
+    document.getElementById('balanceCard').style.background=s2.balance>=0?'linear-gradient(135deg,var(--gold-dim),#1C1410)':'linear-gradient(135deg,var(--red-dim),#2a0a0a)';
     document.getElementById('balanceAmount').style.color=s2.balance>=0?'var(--gold)':'var(--red)';
   }
   const filtered=detailFilter==='전체'?details:details.filter(d=>d.cat===detailFilter);
@@ -586,10 +586,10 @@ function renderAnnual(){
   const md=MONTHS.map((_,i)=>{const d=getMonthData(i),s=calcSummary(d);return{...s,hasAny:fbCache?.actuals?.[i]!=null||i===3};});
   if(annualChart)annualChart.destroy();
   annualChart=new Chart(document.getElementById('annualChart'),{type:'bar',data:{labels:MONTHS,datasets:[
-    {label:'수입',data:md.map((d,i)=>d.hasAny?d.income:null),backgroundColor:'#4f8ef7',borderRadius:4},
-    {label:'지출합계',data:md.map((d,i)=>d.hasAny?d.income-d.balance:null),backgroundColor:'#f75c5c',borderRadius:4},
-    {label:'윤희 용돈',data:md.map((d,i)=>d.hasAny?d.balance:null),backgroundColor:'#f5c842',borderRadius:4}
-  ]},options:{plugins:{legend:{labels:{color:'#8b91a8',font:{family:'Pretendard',size:11},boxWidth:12}}},scales:{x:{ticks:{color:'#8b91a8',font:{family:'Pretendard',size:10}},grid:{color:'#2e3347'}},y:{ticks:{color:'#8b91a8',font:{family:'Pretendard',size:10},callback:v=>(v/10000).toFixed(0)+'만'},grid:{color:'#2e3347'}}},animation:{duration:600}}});
+    {label:'수입',data:md.map((d,i)=>d.hasAny?d.income:null),backgroundColor:'#6B9FD4',borderRadius:4},
+    {label:'지출합계',data:md.map((d,i)=>d.hasAny?d.income-d.balance:null),backgroundColor:'#E05C5C',borderRadius:4},
+    {label:'윤희 용돈',data:md.map((d,i)=>d.hasAny?d.balance:null),backgroundColor:'#CF8C63',borderRadius:4}
+  ]},options:{plugins:{legend:{labels:{color:'#9B8F83',font:{family:'Pretendard',size:11},boxWidth:12}}},scales:{x:{ticks:{color:'#9B8F83',font:{family:'Pretendard',size:10}},grid:{color:'#3D3530'}},y:{ticks:{color:'#9B8F83',font:{family:'Pretendard',size:10},callback:v=>(v/10000).toFixed(0)+'만'},grid:{color:'#3D3530'}}},animation:{duration:600}}});
   document.getElementById('annualTable').innerHTML=`<thead><tr><th>월</th><th>수입</th><th>지출</th><th>윤희 용돈</th></tr></thead><tbody>${md.map((d,i)=>d.hasAny?`<tr><td>${MONTHS[i]}</td><td class="has-val" style="color:#4f8ef7">${(d.income/10000).toFixed(0)}만</td><td class="has-val" style="color:#f75c5c">${((d.income-d.balance)/10000).toFixed(0)}만</td><td class="has-val" style="color:${d.balance>=0?'#f5c842':'#f75c5c'}">${(d.balance/10000).toFixed(0)}만</td></tr>`:`<tr><td>${MONTHS[i]}</td><td>-</td><td>-</td><td>-</td></tr>`).join('')}</tbody>`;
 }
 function showPage(page){
