@@ -214,7 +214,7 @@
       <div><div class="balance-amount" id="savingsTotal" style="color:var(--green)">-</div></div>
     </div>
     <div class="annual-wrap">
-      <div class="chart-title">📊 월별 윤희 용돈 추이</div>
+      <div class="chart-title">📊 월별 moneyflow</div>
       <div class="chart-container"><canvas id="annualChart"></canvas></div>
     </div>
     <div class="annual-wrap">
@@ -593,9 +593,11 @@ function renderAnnual(){
     const d=getMonthData(i),s=calcSummary(d);
     const extRaw=fbDetailCache?.['extra_savings_'+i];
     const extra=extRaw?Object.values(extRaw).reduce((a,e)=>a+e.amount,0):0;
+    const details=loadDetails(i);
+    const detailTotal=details.reduce((a,b)=>a+b.amount,0);
     const savTotal=s.savings+extra;
     const yongdon=s.balance-extra;
-    const spend=s.income-savTotal-yongdon;
+    const spend=s.fixed+(detailTotal>0?detailTotal:s.livingBudget);
     return{...s,savTotal,yongdon,spend,hasAny:fbCache?.actuals?.[i]!=null||i===3};
   });
   if(annualChart)annualChart.destroy();
