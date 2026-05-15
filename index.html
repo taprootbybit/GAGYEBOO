@@ -190,7 +190,7 @@
     <div class="balance-card" id="balanceCard">
       <div>
         <div class="balance-label">💛 윤희 용돈</div>
-        <div class="balance-sub">수입 - 고정지출 - 저축 - 생활비 예산</div>
+        <div class="balance-sub">수입 - 고정지출 - 저축 - 생활비</div>
       </div>
       <div><div class="balance-amount" id="balanceAmount">-</div></div>
     </div>
@@ -340,7 +340,7 @@ window.addEventListener('firebase-ready',async()=>{
   try{
     const snap=await window.fbGet('gagyebu/2026/actuals/3');
     const vsnap=await window.fbGet('gagyebu/2026/version');
-    if(snap.val()===null||vsnap.val()!=='v12'){
+    if(snap.val()===null||vsnap.val()!=='v13'){
       const existing=snap.val()||{};
       for(const cat of ['income','fixed','savings','living']){
         for(let i=0;i<FIXED_BUDGET[cat].length;i++){
@@ -350,7 +350,7 @@ window.addEventListener('firebase-ready',async()=>{
           }
         }
       }
-      await window.fbSet('gagyebu/2026/version','v12');
+      await window.fbSet('gagyebu/2026/version','v13');
     }
     const dsnap=await window.fbGet('gagyebu/2026/details/3');
     if(dsnap.val()===null){
@@ -401,7 +401,7 @@ function calcSummary(data,detailTotal){
   const livingBudget=bsum(data.living);
   const livingActual=(detailTotal!==undefined&&detailTotal!==null)?detailTotal:livingBudget;
   return{income,fixed,savings,living:livingActual,livingBudget,livingActual,
-    balance:income-fixed-savings-livingBudget,
+    balance:income-fixed-savings-sum(data.living),
     budgetIncome:bsum(data.income),budgetFixed:bsum(data.fixed),budgetSavings:bsum(data.savings),budgetLiving:livingBudget};
 }
 
