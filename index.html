@@ -629,34 +629,57 @@ const WEDDING_CATS=[
     {name:'답례품',amount:1200000,note:'200명 × 6,000원 기준'},
   ]},
 ];
+const WEDDING_EXTRA=[
+  {name:'경기청년 결혼 축하 복지포인트',amount:1000000,note:'하반기 예정'},
+  {name:'청년기본소득 (윤희)',amount:1000000,note:'예정'},
+  {name:'케이뱅크 이자지원 이벤트',amount:1000000,note:'예정'},
+];
 function renderWedding(){
+  const extraTotal=WEDDING_EXTRA.reduce((a,e)=>a+e.amount,0);
+  const totalBudget=WEDDING_BUDGET+extraTotal;
   const spent=WEDDING_CATS.reduce((a,c)=>a+c.items.reduce((b,i)=>b+i.amount,0),0);
-  const remain=WEDDING_BUDGET-spent;
-  const pct=Math.min(100,Math.round(spent/WEDDING_BUDGET*100));
+  const remain=totalBudget-spent;
+  const pct=Math.min(100,Math.round(spent/totalBudget*100));
   document.getElementById('weddingContent').innerHTML=
-    '<div style="background:linear-gradient(135deg,#FFF0F4,#FFE8EF);border:1px solid #F4B8CC;border-radius:16px;padding:20px;margin-bottom:20px;">'+
-      '<div style="font-size:15px;color:#D4607A;font-weight:700;margin-bottom:12px;">💍 형권 & 윤희 결혼 예산</div>'+
-      '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;">'+
-        '<div><div style="font-size:13px;color:#E8849A;margin-bottom:3px;">총 예산</div><div style="font-size:30px;font-weight:800;color:#D4607A;">'+fmt(WEDDING_BUDGET)+'</div></div>'+
-        '<div style="text-align:right;"><div style="font-size:13px;color:#E8849A;margin-bottom:3px;">잔액</div><div style="font-size:22px;font-weight:800;color:'+(remain>=0?'#3D9E58':'#D44C4C')+';">'+fmt(remain)+'</div></div>'+
+    '<div style="background:linear-gradient(135deg,var(--gold),var(--purple));border-radius:16px;padding:20px;color:#fff;margin-bottom:20px;">'+
+      '<div style="font-size:15px;opacity:.85;margin-bottom:4px;">💍 결혼 예산 현황</div>'+
+      '<div style="font-size:30px;font-weight:800;">'+fmt(totalBudget)+'</div>'+
+      '<div style="font-size:13px;opacity:.75;margin-bottom:12px;">총예산 (기본 '+fmt(WEDDING_BUDGET)+' + 추가 '+fmt(extraTotal)+')</div>'+
+      '<div style="background:rgba(255,255,255,.25);border-radius:6px;height:8px;overflow:hidden;margin-bottom:8px;">'+
+        '<div style="background:#fff;height:8px;border-radius:6px;width:'+pct+'%;transition:width .4s;"></div>'+
       '</div>'+
-      '<div style="background:#F4C8D8;border-radius:8px;height:10px;margin-bottom:10px;">'+
-        '<div style="background:linear-gradient(90deg,#D4607A,#E8849A);border-radius:8px;height:10px;width:'+pct+'%;"></div>'+
+      '<div style="display:flex;justify-content:space-between;font-size:14px;">'+
+        '<span>지출 '+fmt(spent)+' ('+pct+'%)</span>'+
+        '<span>잔액 '+fmt(remain)+'</span>'+
       '</div>'+
-      '<div style="display:flex;justify-content:space-between;font-size:13px;color:#E8849A;"><span>지출 '+fmt(spent)+'</span><span>'+pct+'% 사용</span></div>'+
     '</div>'+
-    WEDDING_CATS.map(c=>{
-      const ct=c.items.reduce((a,i)=>a+i.amount,0);
-      return '<div class="section">'+
-        '<div class="section-header"><span class="section-title">'+c.cat+'</span><span class="section-total" style="color:#D4607A;">'+fmt(ct)+'</span></div>'+
-        '<div class="item-list">'+
-          c.items.map(i=>
-            '<div class="item"><div class="item-info">'+
-              '<div class="item-name">'+i.name+'</div>'+
-              (i.note?'<div class="item-sub">'+i.note+'</div>':'')+
-            '</div><div style="font-size:17px;font-weight:700;color:var(--text);">'+fmt(i.amount)+'</div></div>'
-          ).join('')+
-        '</div></div>';
+    '<div style="background:var(--green-dim);border:1px solid var(--green);border-radius:12px;padding:16px;margin-bottom:16px;">'+
+      '<div style="font-size:15px;font-weight:700;color:var(--green);margin-bottom:10px;">💰 추가 예산 (예정)</div>'+
+      WEDDING_EXTRA.map(function(e){
+        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06);">'+
+          '<div>'+
+            '<div style="font-size:15px;font-weight:600;color:var(--text);">'+e.name+'</div>'+
+            (e.note?'<div style="font-size:13px;color:var(--text2);">'+e.note+'</div>':'')+
+          '</div>'+
+          '<div style="font-size:17px;font-weight:700;color:var(--green);">+'+fmt(e.amount)+'</div>'+
+        '</div>';
+      }).join('')+
+    '</div>'+
+    WEDDING_CATS.map(function(cat){
+      const catTotal=cat.items.reduce(function(a,i){return a+i.amount;},0);
+      return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">'+
+          '<div style="font-size:16px;font-weight:700;color:var(--text);">'+cat.cat+'</div>'+
+          '<div style="font-size:15px;font-weight:700;color:var(--gold);">'+fmt(catTotal)+'</div>'+
+        '</div>'+
+        cat.items.map(function(i){
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);">'+
+            '<div>'+
+              '<div style="font-size:15px;font-weight:600;color:var(--text);">'+i.name+'</div>'+
+              (i.note?'<div style="font-size:13px;color:var(--text2);">'+i.note+'</div>':'')+
+            '</div><div style="font-size:17px;font-weight:700;color:var(--text);">'+fmt(i.amount)+'</div></div>';
+        }).join('')+
+      '</div></div>';
     }).join('');
 }
 function showPage(page){
