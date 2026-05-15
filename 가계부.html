@@ -281,7 +281,7 @@ const FIXED_BUDGET={
     {name:'아파트 관리비',budget:330000},{name:'보금자리론',budget:1376645},
     {name:'삼성화재 04016',budget:12570},
     {name:'삼성화재 04062',budget:20702},{name:'DB손 02304',budget:18640},{name:'호두보험',budget:25386},{name:'어머니 생활비',budget:900000},
-    {name:'대출안심보험',budget:25200}
+    {name:'대출안심보험',budget:93240}
   ],
   savings:[
     {name:'윤희 적금',budget:500000,sub:'케이뱅크 우대적금'},
@@ -340,14 +340,14 @@ window.addEventListener('firebase-ready',async()=>{
   try{
     const snap=await window.fbGet('gagyebu/2026/actuals/3');
     const vsnap=await window.fbGet('gagyebu/2026/version');
-    if(snap.val()===null||vsnap.val()!=='v9'){
+    if(snap.val()===null||vsnap.val()!=='v10'){
       for(const cat of ['income','fixed','savings','living']){
         for(let i=0;i<FIXED_BUDGET[cat].length;i++){
           const v=APRIL_ACTUAL[cat]?.[i];
           if(v!==null&&v!==undefined) await window.fbSet('gagyebu/2026/actuals/3/'+cat+'/'+i,v);
         }
       }
-      await window.fbSet('gagyebu/2026/version','v9');
+      await window.fbSet('gagyebu/2026/version','v10');
     }
     const dsnap=await window.fbGet('gagyebu/2026/details/3');
     if(dsnap.val()===null){
