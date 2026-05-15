@@ -451,7 +451,7 @@ function renderMonth(){
         <div style="width:${livingPct}%;height:100%;background:${livingBarColor};border-radius:4px;transition:width .6s"></div>
       </div>
     </div>`;
-  const bal=s.balance-extraTotal;
+  const bal=s.balance;
   document.getElementById('balanceAmount').textContent=fmt(bal);
   document.getElementById('balanceCard').style.background=bal>=0?'linear-gradient(135deg,#FBF0E8,#F5E5D5)':'linear-gradient(135deg,var(--red-dim),#2a0a0a)';
   document.getElementById('balanceAmount').style.color=bal>=0?'var(--gold)':'var(--red)';
@@ -596,7 +596,7 @@ function renderAnnual(){
     const details=loadDetails(i);
     const detailTotal=details.reduce((a,b)=>a+b.amount,0);
     const savTotal=s.savings+extra;
-    const yongdon=s.balance-extra;
+    const yongdon=s.balance;
     const spend=s.fixed+(detailTotal>0?detailTotal:s.livingBudget);
     const remain=s.income-spend;
     return{...s,savTotal,yongdon,spend,remain,hasAny:fbCache?.actuals?.[i]!=null||i===3};
