@@ -585,16 +585,16 @@ async function deleteDetail(id){
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500);}
 
 function renderAnnual(){
-  const md=MONTHS.map((_,i)=>{const d=getMonthData(i),s=calcSummary(d);return{...s,hasAny:fbCache?.actuals?.[i]!=null||i===3};});
+  const md=MONTHS.map((_,i)=>{const d=getMonthData(i),s=calcSummary(d);const spend=s.income-s.savings-s.balance;return{...s,spend,hasAny:fbCache?.actuals?.[i]!=null||i===3};});
   if(annualChart)annualChart.destroy();
   annualChart=new Chart(document.getElementById('annualChart'),{type:'bar',data:{labels:MONTHS,datasets:[
     {label:'수입',data:md.map(d=>d.hasAny?d.income:null),backgroundColor:'#6B9FD4',borderRadius:4},
-    {label:'지출',data:md.map(d=>d.hasAny?d.fixed+d.living:null),backgroundColor:'#E05C5C',borderRadius:4},
+    {label:'지출',data:md.map(d=>d.hasAny?d.spend:null),backgroundColor:'#E05C5C',borderRadius:4},
     {label:'저축',data:md.map(d=>d.hasAny?d.savings:null),backgroundColor:'#3D9E58',borderRadius:4},
     {label:'잔액',data:md.map(d=>d.hasAny?d.balance:null),backgroundColor:'#CF8C63',borderRadius:4}
   ]},options:{plugins:{legend:{labels:{color:'#78716C',font:{family:'Pretendard',size:13},boxWidth:12}}},scales:{x:{ticks:{color:'#78716C',font:{family:'Pretendard',size:12}},grid:{color:'#E5DDD4'}},y:{ticks:{color:'#78716C',font:{family:'Pretendard',size:12},callback:v=>(v/10000).toFixed(0)+'만'},grid:{color:'#E5DDD4'}}},animation:{duration:600}}});
   const fmtM=v=>(v/10000).toFixed(0)+'만';
-  document.getElementById('annualTable').innerHTML=`<thead><tr><th>월</th><th>수입</th><th>지출</th><th>저축</th><th>잔액</th></tr></thead><tbody>${md.map((d,i)=>d.hasAny?`<tr><td>${MONTHS[i]}</td><td class="has-val" style="color:#4f8ef7">${fmtM(d.income)}</td><td class="has-val" style="color:#f75c5c">${fmtM(d.fixed+d.living)}</td><td class="has-val" style="color:#3D9E58">${fmtM(d.savings)}</td><td class="has-val" style="color:${d.balance>=0?'#CF8C63':'#f75c5c'}">${fmtM(d.balance)}</td></tr>`:`<tr><td>${MONTHS[i]}</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`).join('')}</tbody>`;
+  document.getElementById('annualTable').innerHTML=`<thead><tr><th>월</th><th>수입</th><th>지출</th><th>저축</th><th>잔액</th></tr></thead><tbody>${md.map((d,i)=>d.hasAny?`<tr><td>${MONTHS[i]}</td><td class="has-val" style="color:#4f8ef7">${fmtM(d.income)}</td><td class="has-val" style="color:#f75c5c">${fmtM(d.spend)}</td><td class="has-val" style="color:#3D9E58">${fmtM(d.savings)}</td><td class="has-val" style="color:${d.balance>=0?'#CF8C63':'#f75c5c'}">${fmtM(d.balance)}</td></tr>`:`<tr><td>${MONTHS[i]}</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`).join('')}</tbody>`;
 }
 const WEDDING_BUDGET=69000000;
 const WEDDING_CATS=[
