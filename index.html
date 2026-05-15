@@ -28,10 +28,10 @@
 </script>
 <style>
   :root {
-    --bg:#1C1917;--surface:#262220;--surface2:#312B27;--border:#3D3530;
-    --text:#F0E6D9;--text2:#9B8F83;--blue:#6B9FD4;--blue-dim:#1A2E42;
-    --red:#E05C5C;--red-dim:#3D1818;--green:#72C47A;--green-dim:#1A2E1C;
-    --gold:#CF8C63;--gold-dim:#3A2010;--purple:#C4956A;
+    --bg:#FAF9F6;--surface:#FFFFFF;--surface2:#F5F2EE;--border:#E5DDD4;
+    --text:#1C1917;--text2:#78716C;--blue:#3B7DD8;--blue-dim:#DDEAF8;
+    --red:#D44C4C;--red-dim:#FDEAEA;--green:#3D9E58;--green-dim:#E8F7EC;
+    --gold:#CF8C63;--gold-dim:#FBF0E8;--purple:#C4956A;
     --radius:16px;--radius-sm:10px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -42,7 +42,7 @@
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
   .sync-ok .sync-dot{animation:pulse 2s infinite;}
   .sync-status{font-size:11px;color:var(--text2);display:flex;align-items:center;}
-  .header{background:linear-gradient(135deg,#262220,#1C1917);border-bottom:1px solid var(--border);padding:20px 24px 0;position:sticky;top:0;z-index:100;}
+  .header{background:linear-gradient(135deg,#F5F2EE,#FAF9F6);border-bottom:1px solid var(--border);padding:20px 24px 0;position:sticky;top:0;z-index:100;}
   .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
   .logo{display:flex;align-items:center;gap:12px;}
   .logo-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#CF8C63,#E8A87C);display:flex;align-items:center;justify-content:center;font-size:20px;}
@@ -69,10 +69,10 @@
   .chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;}
   .chart-title{font-size:13px;font-weight:700;margin-bottom:16px;color:var(--text2);}
   .chart-container{position:relative;height:200px;}
-  .balance-card{background:linear-gradient(135deg,var(--gold-dim),#1C1410);border:1px solid #6B4228;border-radius:var(--radius);padding:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
+  .balance-card{background:linear-gradient(135deg,#FBF0E8,#F5E5D5);border:1px solid #D4956A;border-radius:var(--radius);padding:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
   .balance-label{font-size:13px;color:var(--gold);font-weight:600;}
   .balance-amount{font-size:28px;font-weight:800;color:var(--gold);}
-  .balance-sub{font-size:11px;color:#7A5040;margin-top:2px;}
+  .balance-sub{font-size:11px;color:#A07860;margin-top:2px;}
   .annual-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;}
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;}
   .toast.show{opacity:1;}
@@ -152,7 +152,7 @@
   .cat-opt[data-v="교통"].selected{background:#4f8ef7;}
   .cat-opt[data-v="의료"].selected{background:#4ade80;}
   .cat-opt[data-v="기타"].selected{background:#8b91a8;}
-  .modal-save{width:100%;padding:15px;border-radius:var(--radius-sm);background:var(--gold);border:none;color:#1C1410;font-family:'Pretendard',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;}
+  .modal-save{width:100%;padding:15px;border-radius:var(--radius-sm);background:var(--gold);border:none;color:#1C1917;font-family:'Pretendard',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;}
   .loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px;}
   .loading.hide{display:none;}
   @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
@@ -448,10 +448,10 @@ function renderMonth(){
     </div>`;
   const bal=s.balance;
   document.getElementById('balanceAmount').textContent=fmt(bal);
-  document.getElementById('balanceCard').style.background=bal>=0?'linear-gradient(135deg,var(--gold-dim),#1C1410)':'linear-gradient(135deg,var(--red-dim),#2a0a0a)';
+  document.getElementById('balanceCard').style.background=bal>=0?'linear-gradient(135deg,#FBF0E8,#F5E5D5)':'linear-gradient(135deg,var(--red-dim),#2a0a0a)';
   document.getElementById('balanceAmount').style.color=bal>=0?'var(--gold)':'var(--red)';
   if(donutChart)donutChart.destroy();
-  donutChart=new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:['고정지출','저축','생활비','잔액'],datasets:[{data:[s.fixed,s.savings,s.livingActual,Math.max(0,s.balance)],backgroundColor:['#E05C5C','#72C47A','#CF8C63','#6B9FD4'],borderWidth:0,borderRadius:4}]},options:{cutout:'70%',plugins:{legend:{position:'bottom',labels:{color:'#9B8F83',font:{family:'Pretendard',size:11},padding:12,boxWidth:12}}},animation:{duration:600}}});
+  donutChart=new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:['고정지출','저축','생활비','잔액'],datasets:[{data:[s.fixed,s.savings,s.livingActual,Math.max(0,s.balance)],backgroundColor:['#E05C5C','#72C47A','#CF8C63','#6B9FD4'],borderWidth:0,borderRadius:4}]},options:{cutout:'70%',plugins:{legend:{position:'bottom',labels:{color:'#78716C',font:{family:'Pretendard',size:11},padding:12,boxWidth:12}}},animation:{duration:600}}});
   renderSection('incomeSection','💰 수입','income',data.income,'#4f8ef7');
   renderSection('fixedSection','📌 고정지출','fixed',data.fixed,'#f75c5c');
   renderSection('savingsSection','💎 저축 / 적립','savings',data.savings,'#4ade80');
@@ -541,7 +541,7 @@ function renderDetailSection(){
   if(livingCard){
     livingCard.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div><div class="card-label">🛒 생활비</div><div class="card-value" style="color:${livingColor2}">${fmt(s2.livingActual)}</div><div class="card-sub">예산 ${fmt(s2.livingBudget)}</div></div><div style="text-align:right"><div style="font-size:11px;color:var(--text2);margin-bottom:4px">${livingRemain2>=0?'남은 금액':'초과'}</div><div style="font-size:18px;font-weight:800;color:${livingColor2}">${fmt(Math.abs(livingRemain2))}</div><div style="font-size:11px;color:var(--text2)">${livingPct2}% 사용</div></div></div><div style="background:var(--border);border-radius:4px;height:6px;overflow:hidden"><div style="width:${livingPct2}%;height:100%;background:${livingBarColor2};border-radius:4px;transition:width .6s"></div></div>`;
     document.getElementById('balanceAmount').textContent=fmt(s2.balance);
-    document.getElementById('balanceCard').style.background=s2.balance>=0?'linear-gradient(135deg,var(--gold-dim),#1C1410)':'linear-gradient(135deg,var(--red-dim),#2a0a0a)';
+    document.getElementById('balanceCard').style.background=s2.balance>=0?'linear-gradient(135deg,#FBF0E8,#F5E5D5)':'linear-gradient(135deg,var(--red-dim),#2a0a0a)';
     document.getElementById('balanceAmount').style.color=s2.balance>=0?'var(--gold)':'var(--red)';
   }
   const filtered=detailFilter==='전체'?details:details.filter(d=>d.cat===detailFilter);
@@ -589,7 +589,7 @@ function renderAnnual(){
     {label:'수입',data:md.map((d,i)=>d.hasAny?d.income:null),backgroundColor:'#6B9FD4',borderRadius:4},
     {label:'지출합계',data:md.map((d,i)=>d.hasAny?d.income-d.balance:null),backgroundColor:'#E05C5C',borderRadius:4},
     {label:'윤희 용돈',data:md.map((d,i)=>d.hasAny?d.balance:null),backgroundColor:'#CF8C63',borderRadius:4}
-  ]},options:{plugins:{legend:{labels:{color:'#9B8F83',font:{family:'Pretendard',size:11},boxWidth:12}}},scales:{x:{ticks:{color:'#9B8F83',font:{family:'Pretendard',size:10}},grid:{color:'#3D3530'}},y:{ticks:{color:'#9B8F83',font:{family:'Pretendard',size:10},callback:v=>(v/10000).toFixed(0)+'만'},grid:{color:'#3D3530'}}},animation:{duration:600}}});
+  ]},options:{plugins:{legend:{labels:{color:'#78716C',font:{family:'Pretendard',size:11},boxWidth:12}}},scales:{x:{ticks:{color:'#78716C',font:{family:'Pretendard',size:10}},grid:{color:'#E5DDD4'}},y:{ticks:{color:'#78716C',font:{family:'Pretendard',size:10},callback:v=>(v/10000).toFixed(0)+'만'},grid:{color:'#E5DDD4'}}},animation:{duration:600}}});
   document.getElementById('annualTable').innerHTML=`<thead><tr><th>월</th><th>수입</th><th>지출</th><th>윤희 용돈</th></tr></thead><tbody>${md.map((d,i)=>d.hasAny?`<tr><td>${MONTHS[i]}</td><td class="has-val" style="color:#4f8ef7">${(d.income/10000).toFixed(0)}만</td><td class="has-val" style="color:#f75c5c">${((d.income-d.balance)/10000).toFixed(0)}만</td><td class="has-val" style="color:${d.balance>=0?'#f5c842':'#f75c5c'}">${(d.balance/10000).toFixed(0)}만</td></tr>`:`<tr><td>${MONTHS[i]}</td><td>-</td><td>-</td><td>-</td></tr>`).join('')}</tbody>`;
 }
 function showPage(page){
