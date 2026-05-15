@@ -224,9 +224,11 @@
   </div>
 </div>
 
+<div class="page pb-safe" id="pageWedding"><div class="main" id="weddingContent"></div></div>
 <div class="bottom-nav">
   <button class="nav-btn active" id="navMonth" onclick="showPage('month')"><span class="icon">📅</span>월별</button>
   <button class="nav-btn" id="navAnnual" onclick="showPage('annual')"><span class="icon">📊</span>연간</button>
+  <button class="nav-btn" id="navWedding" onclick="showPage('wedding')"><span class="icon">💍</span>결혼</button>
 </div>
 
 <div class="modal-bg" id="modalBg" onclick="closeModal(event)">
@@ -592,12 +594,72 @@ function renderAnnual(){
   ]},options:{plugins:{legend:{labels:{color:'#78716C',font:{family:'Pretendard',size:13},boxWidth:12}}},scales:{x:{ticks:{color:'#78716C',font:{family:'Pretendard',size:12}},grid:{color:'#E5DDD4'}},y:{ticks:{color:'#78716C',font:{family:'Pretendard',size:12},callback:v=>(v/10000).toFixed(0)+'만'},grid:{color:'#E5DDD4'}}},animation:{duration:600}}});
   document.getElementById('annualTable').innerHTML=`<thead><tr><th>월</th><th>수입</th><th>지출</th><th>윤희 용돈</th></tr></thead><tbody>${md.map((d,i)=>d.hasAny?`<tr><td>${MONTHS[i]}</td><td class="has-val" style="color:#4f8ef7">${(d.income/10000).toFixed(0)}만</td><td class="has-val" style="color:#f75c5c">${((d.income-d.balance)/10000).toFixed(0)}만</td><td class="has-val" style="color:${d.balance>=0?'#f5c842':'#f75c5c'}">${(d.balance/10000).toFixed(0)}만</td></tr>`:`<tr><td>${MONTHS[i]}</td><td>-</td><td>-</td><td>-</td></tr>`).join('')}</tbody>`;
 }
+const WEDDING_BUDGET=69000000;
+const WEDDING_CATS=[
+  {cat:'💍 예물',items:[
+    {name:'조세핑다이아몬드 반지',amount:11800000},
+    {name:'어머니 예물',amount:5100000},
+    {name:'어머니 예물 (추가)',amount:151200},
+    {name:'윤희 예물',amount:4000000},
+    {name:'윤희 언니 예물',amount:455000},
+  ]},
+  {cat:'📸 촬영',items:[
+    {name:'스튜디오 지엓마지 스탠다드 B',amount:2200000},
+    {name:'스냅',amount:660000},
+  ]},
+  {cat:'👗 의상랜뷰티',items:[
+    {name:'드레스 황정아',amount:2450000,note:'10만원 할인 적용'},
+    {name:'메이크업 에이바이봄 실장',amount:990000},
+  ]},
+  {cat:'💒 예식장',items:[
+    {name:'웨딩홀 계약금',amount:4000000},
+    {name:'혼주',amount:1060000},
+  ]},
+  {cat:'✈️ 신혼여행',items:[
+    {name:'비행기 비즈니스석',amount:577400},
+    {name:'숙소',amount:1996431},
+    {name:'투어',amount:67126},
+  ]},
+];
+function renderWedding(){
+  const spent=WEDDING_CATS.reduce((a,c)=>a+c.items.reduce((b,i)=>b+i.amount,0),0);
+  const remain=WEDDING_BUDGET-spent;
+  const pct=Math.min(100,Math.round(spent/WEDDING_BUDGET*100));
+  document.getElementById('weddingContent').innerHTML=
+    '<div style="background:linear-gradient(135deg,#FFF0F4,#FFE8EF);border:1px solid #F4B8CC;border-radius:16px;padding:20px;margin-bottom:20px;">'+
+      '<div style="font-size:15px;color:#D4607A;font-weight:700;margin-bottom:12px;">💍 형권 & 윤희 결혼 예산</div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;">'+
+        '<div><div style="font-size:13px;color:#E8849A;margin-bottom:3px;">총 예산</div><div style="font-size:30px;font-weight:800;color:#D4607A;">'+fmt(WEDDING_BUDGET)+'</div></div>'+
+        '<div style="text-align:right;"><div style="font-size:13px;color:#E8849A;margin-bottom:3px;">잔액</div><div style="font-size:22px;font-weight:800;color:'+(remain>=0?'#3D9E58':'#D44C4C')+';">'+fmt(remain)+'</div></div>'+
+      '</div>'+
+      '<div style="background:#F4C8D8;border-radius:8px;height:10px;margin-bottom:10px;">'+
+        '<div style="background:linear-gradient(90deg,#D4607A,#E8849A);border-radius:8px;height:10px;width:'+pct+'%;"></div>'+
+      '</div>'+
+      '<div style="display:flex;justify-content:space-between;font-size:13px;color:#E8849A;"><span>지출 '+fmt(spent)+'</span><span>'+pct+'% 사용</span></div>'+
+    '</div>'+
+    WEDDING_CATS.map(c=>{
+      const ct=c.items.reduce((a,i)=>a+i.amount,0);
+      return '<div class="section">'+
+        '<div class="section-header"><span class="section-title">'+c.cat+'</span><span class="section-total" style="color:#D4607A;">'+fmt(ct)+'</span></div>'+
+        '<div class="item-list">'+
+          c.items.map(i=>
+            '<div class="item"><div class="item-info">'+
+              '<div class="item-name">'+i.name+'</div>'+
+              (i.note?'<div class="item-sub">'+i.note+'</div>':'')+
+            '</div><div style="font-size:17px;font-weight:700;color:var(--text);">'+fmt(i.amount)+'</div></div>'
+          ).join('')+
+        '</div></div>';
+    }).join('');
+}
 function showPage(page){
   document.getElementById('pageMonth').classList.toggle('active',page==='month');
   document.getElementById('pageAnnual').classList.toggle('active',page==='annual');
+  document.getElementById('pageWedding').classList.toggle('active',page==='wedding');
   document.getElementById('navMonth').classList.toggle('active',page==='month');
   document.getElementById('navAnnual').classList.toggle('active',page==='annual');
+  document.getElementById('navWedding').classList.toggle('active',page==='wedding');
   if(page==='annual'){renderAnnual();renderSavingsTotal();}
+  if(page==='wedding'){renderWedding();}
 }
 renderTabs();renderMonth();
 </script>
