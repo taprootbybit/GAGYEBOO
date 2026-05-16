@@ -614,7 +614,7 @@ function renderAnnual(){
 const WEDDING_BUDGET=69000000;
 const WEDDING_CATS=[
   {cat:'💍 예물',items:[
-    {name:'조세핀다이아몬드 반지',amount:11800000,paid:true},
+    {name:'조세핀다이아몬드 반지',amount:11800000},
     {name:'어머니 예물',amount:5100000,paid:true},
     {name:'어머니 예물 (추가)',amount:151200,paid:true},
     {name:'윤희 예물',amount:4000000,paid:true},
@@ -631,8 +631,10 @@ const WEDDING_CATS=[
     {name:'신랑 맞춤정장',amount:1090000},
   ]},
   {cat:'💒 예식장',items:[
-    {name:'웨딩홀',amount:27450000,note:'계약금 4,000,000원 납부완료 · 잔금 23,450,000원'},
-    {name:'혼주',amount:1060000,note:'계약금 100,000원 납부완료 · 잔금 960,000원'},
+    {name:'웨딩홀 계약금',amount:4000000,paid:true},
+    {name:'웨딩홀 잔금',amount:23450000},
+    {name:'혼주 계약금',amount:100000,paid:true},
+    {name:'혼주 잔금',amount:960000},
   ]},
   {cat:'✈️ 신혼여행',items:[
     {name:'비행기 비즈니스석',amount:577400,paid:true},
@@ -645,10 +647,25 @@ const WEDDING_CATS=[
     {name:'답례품',amount:1200000,note:'200명 × 6,000원 기준'},
   ]},
 ];
+function toggleWeddingPaid(name){
+  const KEY='wPaid';
+  let paid=JSON.parse(localStorage.getItem(KEY)||'[]');
+  const idx=paid.indexOf(name);
+  if(idx>=0)paid.splice(idx,1);else paid.push(name);
+  localStorage.setItem(KEY,JSON.stringify(paid));
+  renderWedding();
+}
 function renderWedding(){
+  const KEY='wPaid';
+  let paid=JSON.parse(localStorage.getItem(KEY));
+  if(!paid){
+    paid=[];
+    WEDDING_CATS.forEach(function(c){c.items.forEach(function(i){if(i.paid)paid.push(i.name);});});
+    localStorage.setItem(KEY,JSON.stringify(paid));
+  }
+  const paidSet=new Set(paid);
   const spent=WEDDING_CATS.reduce((a,c)=>a+c.items.reduce((b,i)=>b+i.amount,0),0);
-  const paidAmt=WEDDING_CATS.reduce((a,c)=>a+c.items.reduce((b,i)=>b+(i.paid?i.amount:0),0),0)+4100000;
-  const WEDDING_BALANCE=50043660;
+  const paidAmt=WEDDING_CATS.reduce((a,c)=>a+c.items.reduce((b,i)=>b+(paidSet.has(i.name)?i.amount:0),0),0);
   const remain=WEDDING_BUDGET-spent;
   const pct=Math.min(100,Math.round(spent/WEDDING_BUDGET*100));
   document.getElementById('weddingContent').innerHTML=
@@ -659,33 +676,40 @@ function renderWedding(){
       '<div style="background:rgba(255,255,255,.25);border-radius:6px;height:8px;overflow:hidden;margin-bottom:8px;">'+
         '<div style="background:#fff;height:8px;border-radius:6px;width:'+pct+'%;transition:width .4s;"></div>'+
       '</div>'+
-      '<div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">'+
+      '<div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px;">'+
         '<span>지출(예정) '+fmt(spent)+' ('+pct+'%)</span>'+
         '<span>예산잔액 '+fmt(remain)+'</span>'+
       '</div>'+
-      '<div style="display:flex;justify-content:space-between;font-size:14px;padding-top:6px;border-top:1px solid rgba(255,255,255,.3);">'+
-        '<span>✅ 납부완료 '+fmt(paidAmt)+'</span>'+
-        '<span>💰 통장잔액 '+fmt(WEDDING_BALANCE)+'</span>'+
+      '<div style="font-size:15px;font-weight:700;padding-top:6px;border-top:1px solid rgba(255,255,255,.3);">'+
+        '✅ 납부완료 '+fmt(paidAmt)+
       '</div>'+
     '</div>'+
     WEDDING_CATS.map(function(cat){
       const catTotal=cat.items.reduce(function(a,i){return a+i.amount;},0);
+      const catPaid=cat.items.reduce(function(a,i){return a+(paidSet.has(i.name)?i.amount:0);},0);
       return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;">'+
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">'+
           '<div style="font-size:16px;font-weight:700;color:var(--text);">'+cat.cat+'</div>'+
-          '<div style="font-size:15px;font-weight:700;color:var(--gold);">'+fmt(catTotal)+'</div>'+
+          '<div style="text-align:right;">'+
+            '<div style="font-size:15px;font-weight:700;color:var(--gold);">'+fmt(catTotal)+'</div>'+
+            (catPaid>0?'<div style="font-size:12px;color:#4caf50;">✅ '+fmt(catPaid)+'</div>':'')+
+          '</div>'+
         '</div>'+
         cat.items.map(function(i){
-          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);">'+
-            '<div>'+
-              '<div style="display:flex;align-items:center;gap:6px;">'+
-                '<div style="font-size:15px;font-weight:600;color:var(--text);">'+i.name+'</div>'+
-                (i.paid?'<span style="font-size:11px;background:#4caf50;color:#fff;border-radius:10px;padding:1px 7px;font-weight:700;">납부완료</span>':'')+
+          const isPaid=paidSet.has(i.name);
+          const sn=i.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+          return '<div onclick="toggleWeddingPaid(''+sn+'')" style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;">'+
+            '<div style="display:flex;align-items:center;gap:10px;">'+
+              '<span style="font-size:20px;line-height:1;user-select:none;">'+(isPaid?'✅':'⬜️')+'</span>'+
+              '<div>'+
+                '<div style="font-size:15px;font-weight:600;color:'+(isPaid?'#4caf50':'var(--text)')+';">'+i.name+'</div>'+
+                (i.note?'<div style="font-size:13px;color:var(--text2);">'+i.note+'</div>':'')+
               '</div>'+
-              (i.note?'<div style="font-size:13px;color:var(--text2);">'+i.note+'</div>':'')+
-            '</div><div style="font-size:17px;font-weight:700;color:'+(i.paid?'#4caf50':'var(--text)')+';">'+fmt(i.amount)+'</div></div>';
+            '</div>'+
+            '<div style="font-size:17px;font-weight:700;color:'+(isPaid?'#4caf50':'var(--text)')+';">'+fmt(i.amount)+'</div>'+
+          '</div>';
         }).join('')+
-      '</div></div>';
+      '</div>';
     }).join('');
 }
 function showPage(page){
