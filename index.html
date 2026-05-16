@@ -708,8 +708,7 @@ function renderWedding(){
         '</div>'+
         cat.items.map(function(i){
           const isPaid=paidSet.has(i.name);
-          const sn=i.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-          return '<div onclick="toggleWeddingPaid(''+sn+'')" style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;">'+
+          return '<div onclick="toggleWeddingPaid(this.dataset.n)" data-n="'+i.name+'" style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;">'+
             '<div style="display:flex;align-items:center;gap:10px;">'+
               '<span style="font-size:20px;line-height:1;user-select:none;">'+(isPaid?'✅':'⬜️')+'</span>'+
               '<div>'+
