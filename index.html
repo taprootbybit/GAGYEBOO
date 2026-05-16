@@ -340,8 +340,11 @@ function setSyncStatus(state,text){
 window.addEventListener('firebase-ready',async()=>{
   setSyncStatus('syncing','동기화 중...');
   try{
-    const snap=await window.fbGet('gagyebu/2026/actuals/3');
-    const vsnap=await window.fbGet('gagyebu/2026/version');
+    const [snap,vsnap,dsnap]=await Promise.all([
+      window.fbGet('gagyebu/2026/actuals/3'),
+      window.fbGet('gagyebu/2026/version'),
+      window.fbGet('gagyebu/2026/details/3')
+    ]);
     if(snap.val()===null||vsnap.val()!=='v13'){
       const existing=snap.val()||{};
       for(const cat of ['income','fixed','savings','living']){
@@ -354,7 +357,6 @@ window.addEventListener('firebase-ready',async()=>{
       }
       await window.fbSet('gagyebu/2026/version','v13');
     }
-    const dsnap=await window.fbGet('gagyebu/2026/details/3');
     if(dsnap.val()===null){
       const obj={};
       APRIL_DETAILS.forEach((d,i)=>{obj['d'+i]={...d,id:'d'+i};});
