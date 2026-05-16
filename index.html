@@ -646,22 +646,15 @@ const WEDDING_CATS=[
     {name:'답례품',amount:1200000,note:'200명 × 6,000원 기준'},
   ]},
 ];
-const WEDDING_EXTRA=[
-  {name:'경기청년 결혼 축하 복지포인트',amount:1000000,note:'하반기 예정'},
-  {name:'청년기본소득 (윤희)',amount:1000000,note:'예정'},
-  {name:'케이뱅크 이자지원 이벤트',amount:1000000,note:'예정'},
-];
 function renderWedding(){
-  const extraTotal=WEDDING_EXTRA.reduce((a,e)=>a+e.amount,0);
-  const totalBudget=WEDDING_BUDGET+extraTotal;
   const spent=WEDDING_CATS.reduce((a,c)=>a+c.items.reduce((b,i)=>b+i.amount,0),0);
-  const remain=totalBudget-spent;
-  const pct=Math.min(100,Math.round(spent/totalBudget*100));
+  const remain=WEDDING_BUDGET-spent;
+  const pct=Math.min(100,Math.round(spent/WEDDING_BUDGET*100));
   document.getElementById('weddingContent').innerHTML=
     '<div style="background:linear-gradient(135deg,var(--gold),var(--purple));border-radius:16px;padding:20px;color:#fff;margin-bottom:20px;">'+
       '<div style="font-size:15px;opacity:.85;margin-bottom:4px;">💍 결혼 예산 현황</div>'+
-      '<div style="font-size:30px;font-weight:800;">'+fmt(totalBudget)+'</div>'+
-      '<div style="font-size:13px;opacity:.75;margin-bottom:12px;">총예산 (기본 '+fmt(WEDDING_BUDGET)+' + 추가 '+fmt(extraTotal)+')</div>'+
+      '<div style="font-size:30px;font-weight:800;">'+fmt(WEDDING_BUDGET)+'</div>'+
+      '<div style="font-size:13px;opacity:.75;margin-bottom:12px;">총 예산</div>'+
       '<div style="background:rgba(255,255,255,.25);border-radius:6px;height:8px;overflow:hidden;margin-bottom:8px;">'+
         '<div style="background:#fff;height:8px;border-radius:6px;width:'+pct+'%;transition:width .4s;"></div>'+
       '</div>'+
@@ -669,18 +662,6 @@ function renderWedding(){
         '<span>지출 '+fmt(spent)+' ('+pct+'%)</span>'+
         '<span>잔액 '+fmt(remain)+'</span>'+
       '</div>'+
-    '</div>'+
-    '<div style="background:var(--green-dim);border:1px solid var(--green);border-radius:12px;padding:16px;margin-bottom:16px;">'+
-      '<div style="font-size:15px;font-weight:700;color:var(--green);margin-bottom:10px;">💰 추가 예산 (예정)</div>'+
-      WEDDING_EXTRA.map(function(e){
-        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06);">'+
-          '<div>'+
-            '<div style="font-size:15px;font-weight:600;color:var(--text);">'+e.name+'</div>'+
-            (e.note?'<div style="font-size:13px;color:var(--text2);">'+e.note+'</div>':'')+
-          '</div>'+
-          '<div style="font-size:17px;font-weight:700;color:var(--green);">+'+fmt(e.amount)+'</div>'+
-        '</div>';
-      }).join('')+
     '</div>'+
     WEDDING_CATS.map(function(cat){
       const catTotal=cat.items.reduce(function(a,i){return a+i.amount;},0);
