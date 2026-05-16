@@ -658,7 +658,7 @@ function toggleWeddingPlan(name){
   let plan=JSON.parse(localStorage.getItem(KEY)||'null');
   if(plan===null){
     plan=[];
-    WEDDING_CATS.forEach(function(c){c.items.forEach(function(i){if(!i.paid)plan.push(i.name);});});
+    WEDDING_CATS.forEach(function(c){c.items.forEach(function(i){if(!i.paid && i.amount>0)plan.push(i.name);});});
   }
   const idx=plan.indexOf(name);
   if(idx>=0)plan.splice(idx,1);else plan.push(name);
@@ -670,7 +670,7 @@ function renderWedding(){
   let plan=JSON.parse(localStorage.getItem(KEY));
   if(plan===null){
     plan=[];
-    WEDDING_CATS.forEach(function(c){c.items.forEach(function(i){if(!i.paid)plan.push(i.name);});});
+    WEDDING_CATS.forEach(function(c){c.items.forEach(function(i){if(!i.paid && i.amount>0)plan.push(i.name);});});
     localStorage.setItem(KEY,JSON.stringify(plan));
   }
   const planSet=new Set(plan);
