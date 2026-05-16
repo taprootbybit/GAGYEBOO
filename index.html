@@ -666,7 +666,7 @@ function renderWedding(){
     localStorage.setItem(KEY,JSON.stringify(paid));
   }
   const paidSet=new Set(paid);
-  const WEDDING_BALANCE=50043660;
+  const WEDDING_BALANCE=50000000;
   const spent=WEDDING_CATS.reduce((a,c)=>a+c.items.reduce((b,i)=>b+i.amount,0),0);
   const paidAmt=WEDDING_CATS.reduce((a,c)=>a+c.items.reduce((b,i)=>b+(paidSet.has(i.name)?i.amount:0),0),0);
   const remain=WEDDING_BUDGET-spent;
@@ -691,7 +691,7 @@ function renderWedding(){
           '<span>💳 통장잔액 <span style="font-size:11px;opacity:.8;">(5/16 기준)</span></span><span style="font-weight:700;">'+fmt(WEDDING_BALANCE)+'</span>'+
         '</div>'+
         '<div style="display:flex;justify-content:space-between;font-size:15px;font-weight:800;padding-top:4px;border-top:1px solid rgba(255,255,255,.2);">'+
-          '<span>🏦 예상 잔액</span><span>'+fmt(WEDDING_BALANCE-(spent-paidAmt))+'</span>'+
+          '<span>🏦 예상 잔액</span><span>'+fmt(WEDDING_BALANCE-paidAmt)+'</span>'+
         '</div>'+
       '</div>'+
     '</div>'+
