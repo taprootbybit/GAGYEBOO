@@ -250,6 +250,7 @@
         <button class="cat-opt" data-v="쇼핑" onclick="selectCat(this)">쇼핑</button>
         <button class="cat-opt" data-v="교통" onclick="selectCat(this)">교통</button>
         <button class="cat-opt" data-v="의료" onclick="selectCat(this)">의료</button>
+        <button class="cat-opt" data-v="사업비" onclick="selectCat(this)">사업비</button>
         <button class="cat-opt" data-v="기타" onclick="selectCat(this)">기타</button>
       </div>
     </div>
@@ -554,7 +555,7 @@ function renderDetailSection(){
   }
   const filtered=detailFilter==='전체'?details:details.filter(d=>d.cat===detailFilter);
   const total=details.reduce((a,b)=>a+b.amount,0);
-  const cats=['식비','카페','쇼핑','교통','의료','기타'];
+  const cats=['식비','카페','쇼핑','교통','의료','사업비','기타'];
   const ct={};cats.forEach(c=>{ct[c]=details.filter(d=>d.cat===c).reduce((a,b)=>a+b.amount,0);});
   const top=cats.filter(c=>ct[c]>0).sort((a,b)=>ct[b]-ct[a]);
   const ml=MONTHS[currentMonth];
