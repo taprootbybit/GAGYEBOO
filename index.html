@@ -555,7 +555,7 @@ function renderDetailSection(){
   }
   const filtered=detailFilter==='전체'?details:details.filter(d=>d.cat===detailFilter);
   const total=details.reduce((a,b)=>a+b.amount,0);
-  const cats=['식비','카페','쇼핑','교통','의료','사업비','기타'];
+  const cats=['사업비','식비','카페','쇼핑','교통','의료','기타'];
   const ct={};cats.forEach(c=>{ct[c]=details.filter(d=>d.cat===c).reduce((a,b)=>a+b.amount,0);});
   const top=cats.filter(c=>ct[c]>0).sort((a,b)=>ct[b]-ct[a]);
   const ml=MONTHS[currentMonth];
